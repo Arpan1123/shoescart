@@ -8,6 +8,12 @@ function Footer() {
           <div className="footer-brand drift-up">
             <h2>👟 <span className="gradient-text">ShoesCart</span></h2>
             <p>Your destination for premium footwear. We curate the finest sneakers and shoes from the world's top brands, delivering style and comfort right to your door.</p>
+            <div className="footer-socials" style={{ marginTop: 'var(--spacing-lg)' }}>
+              <a href="#" aria-label="Instagram">📷</a>
+              <a href="#" aria-label="Twitter">🐦</a>
+              <a href="#" aria-label="Facebook">📘</a>
+              <a href="#" aria-label="YouTube">🎬</a>
+            </div>
           </div>
 
           <div className="footer-col drift-up" style={{ animationDelay: '0.1s' }}>
@@ -40,6 +46,7 @@ function Footer() {
           <div className="footer-col drift-up" style={{ animationDelay: '0.4s' }}>
             <h3>Account</h3>
             <Link to="/account">My Account</Link>
+            <Link to="/wishlist">My Wishlist</Link>
             <Link to="/cart">My Cart</Link>
             <Link to="/login">Login / Sign Up</Link>
           </div>
@@ -47,11 +54,9 @@ function Footer() {
 
         <div className="footer-bottom">
           <p>© 2026 ShoesCart. All rights reserved.</p>
-          <div className="footer-socials">
-            <a href="#" aria-label="Instagram">📷</a>
-            <a href="#" aria-label="Twitter">🐦</a>
-            <a href="#" aria-label="Facebook">📘</a>
-            <a href="#" aria-label="YouTube">🎬</a>
+          <div className="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const API_URL = '/api';
 
-function ProductDetail({ addToCart }) {
+function ProductDetail({ addToCart, wishlist = [], toggleWishlist }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [shoe, setShoe] = useState(null);
@@ -13,6 +13,7 @@ function ProductDetail({ addToCart }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [mainImage, setMainImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [imageZoom, setImageZoom] = useState(false);
 
   useEffect(() => {
     setLoaded(false);
@@ -24,6 +25,17 @@ function ProductDetail({ addToCart }) {
         setSelectedColor(data.colors?.[0]);
         setLoading(false);
         requestAnimationFrame(() => setLoaded(true));
+
+        // Track recently viewed
+        try {
+          const saved = JSON.parse(localStorage.getItem('shoescart_recently_viewed') || '[]');
+          const filtered = saved.filter(s => s.id !== data.id);
+          const updated = [
+            { id: data.id, name: data.name, brand: data.brand, price: data.price, image: data.image },
+            ...filtered,
+          ].slice(0, 6);
+          localStorage.setItem('shoescart_recently_viewed', JSON.stringify(updated));
+        } catch { /* ignore */ }
       })
       .catch(err => {
         console.error(err);
@@ -32,13 +44,15 @@ function ProductDetail({ addToCart }) {
   }, [id]);
 
   if (loading) return (
-    <div className="product-detail" style={{ textAlign: 'center', paddingTop: '200px' }}>
-      <p style={{ color: 'var(--text-muted)' }}>Loading shoe details...</p>
+    <div className="product-detail page-transition" style={{ textAlign: 'center', paddingTop: '200px' }}>
+      <div className="skeleton-detail-loader">
+        <div className="skeleton-shimmer" style={{ width: '100%', height: '400px', borderRadius: '16px' }}></div>
+      </div>
     </div>
   );
 
   if (!shoe) return (
-    <div className="product-detail" style={{ textAlign: 'center', paddingTop: '200px' }}>
+    <div className="product-detail page-transition" style={{ textAlign: 'center', paddingTop: '200px' }}>
       <h2>Shoe not found</h2>
       <button className="btn btn-primary" onClick={() => navigate('/shop')} style={{ marginTop: '1rem' }}>Back to Shop</button>
     </div>
@@ -68,8 +82,10 @@ function ProductDetail({ addToCart }) {
     });
   };
 
+  const isWished = wishlist.some(w => w.id === shoe.id);
+
   return (
-    <div className="product-detail" id="product-detail">
+    <div className="product-detail page-transition" id="product-detail">
       <div className="container">
         <button className="back-btn" onClick={() => navigate(-1)} id="back-btn">
           ← Back
@@ -82,8 +98,13 @@ function ProductDetail({ addToCart }) {
             id="product-gallery"
             style={{ opacity: loaded ? undefined : 0 }}
           >
-            <div className="product-gallery-main">
+            <div
+              className={`product-gallery-main ${imageZoom ? 'zoomed' : ''}`}
+              onClick={() => setImageZoom(!imageZoom)}
+              title={imageZoom ? 'Click to zoom out' : 'Click to zoom in'}
+            >
               <img src={shoe.images?.[mainImage] || shoe.image} alt={shoe.name} />
+              <div className="zoom-hint">{imageZoom ? '🔍 Click to zoom out' : '🔍 Click to zoom in'}</div>
             </div>
             {shoe.images && shoe.images.length > 1 && (
               <div className="product-gallery-thumbs">
@@ -154,12 +175,42 @@ function ProductDetail({ addToCart }) {
               ))}
             </div>
 
+            {/* Quantity */}
+            <div className="product-option-label">Quantity</div>
+            <div className="product-qty-selector">
+              <button className="qty-btn" onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button>
+              <span className="qty-value">{quantity}</span>
+              <button className="qty-btn" onClick={() => setQuantity(quantity + 1)}>+</button>
+            </div>
+
             {/* Actions */}
             <div className="product-actions">
               <button className="btn btn-primary btn-lg drift-glow" onClick={handleAddToCart} id="add-to-cart-detail">
                 🛒 Add to Cart — ₹{(shoe.price * quantity).toFixed(2)}
               </button>
-              <button className="btn btn-secondary btn-lg" id="wishlist-detail">♡</button>
+              <button
+                className={`btn btn-secondary btn-lg detail-wish-btn ${isWished ? 'wished' : ''}`}
+                onClick={() => toggleWishlist(shoe)}
+                id="wishlist-detail"
+              >
+                {isWished ? '❤️' : '♡'}
+              </button>
+            </div>
+
+            {/* Trust badges */}
+            <div className="trust-badges">
+              <div className="trust-badge">
+                <span>🚚</span>
+                <span>Free Shipping</span>
+              </div>
+              <div className="trust-badge">
+                <span>🔄</span>
+                <span>30-Day Returns</span>
+              </div>
+              <div className="trust-badge">
+                <span>✅</span>
+                <span>100% Authentic</span>
+              </div>
             </div>
           </div>
         </div>

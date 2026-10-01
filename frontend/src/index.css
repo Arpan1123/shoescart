@@ -366,7 +366,7 @@ input, select {
   right: -20%;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(255, 77, 77, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
   border-radius: 50%;
   animation: float 8s ease-in-out infinite;
 }
@@ -378,7 +378,7 @@ input, select {
   left: -10%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(255, 138, 92, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
   border-radius: 50%;
   animation: float 10s ease-in-out infinite reverse;
 }
@@ -470,10 +470,21 @@ input, select {
 .hero-shoe-img {
   width: 100%;
   max-width: 580px;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   transform: rotate(-5deg);
   transition: transform var(--transition-slow);
-  filter: drop-shadow(0 20px 60px rgba(255, 77, 77, 0.2));
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.5));
+  mix-blend-mode: normal;
+  object-fit: contain;
+}
+
+.hero-shoe-img.hero-shoe-fullsize {
+  max-width: none;
+  width: 130%;
+  min-width: 500px;
+  transform: none;
+  transition: transform 0.12s ease-out, filter 0.12s ease-out;
+  image-rendering: auto;
 }
 
 .hero-shoe-img:hover {
@@ -2891,4 +2902,1852 @@ input, select {
 
 .toggle-switch input:checked + .toggle-slider::before {
   transform: translateX(22px);
+}
+
+/* ============================================
+   Page Transitions
+   ============================================ */
+
+.page-transition {
+  animation: pageIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   3D Tilt Product Card
+   ============================================ */
+
+.product-card-3d {
+  transition: transform 0.15s ease, box-shadow var(--transition-base), border-color var(--transition-base);
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
+}
+
+.product-card-3d:hover {
+  box-shadow: 0 20px 60px rgba(255, 77, 77, 0.15), var(--shadow-md);
+}
+
+.product-card-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-gradient);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity var(--transition-base);
+  filter: blur(8px);
+}
+
+.product-card-3d:hover .product-card-glow {
+  opacity: 0.3;
+}
+
+/* Product Card Overlay */
+.product-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: 3;
+}
+
+.product-card:hover .product-card-overlay {
+  opacity: 1;
+}
+
+.product-card-quickview {
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  transform: translateY(10px);
+  backdrop-filter: blur(4px);
+}
+
+.product-card:hover .product-card-quickview {
+  transform: translateY(0);
+}
+
+.product-card-quickview:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Product Card Discount Badge */
+.product-card-discount {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: var(--success);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  z-index: 2;
+}
+
+/* Wished Heart */
+.product-card-wishlist.wished {
+  background: var(--accent);
+  transform: scale(1.1);
+}
+
+/* ============================================
+   Skeleton Loading
+   ============================================ */
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+.skeleton-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.skeleton-image {
+  padding-top: 100%;
+  width: 100%;
+}
+
+.skeleton-body {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.skeleton-line {
+  border-radius: 6px;
+}
+
+.skeleton-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-sm);
+}
+
+.skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-detail-loader {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Quick View Modal
+   ============================================ */
+
+.quickview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.quickview-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  max-width: 960px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  animation: modalSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.quickview-close {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all var(--transition-base);
+}
+
+.quickview-close:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.quickview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.quickview-gallery {
+  padding: var(--spacing-xl);
+  border-right: 1px solid var(--border);
+}
+
+.quickview-main-image {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  margin-bottom: var(--spacing-md);
+}
+
+.quickview-main-image img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.quickview-thumbs {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.quickview-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 0;
+  background: none;
+}
+
+.quickview-thumb.active,
+.quickview-thumb:hover {
+  border-color: var(--accent);
+}
+
+.quickview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quickview-info {
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.quickview-name {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.quickview-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.quickview-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.quickview-actions .btn:first-child {
+  flex: 1;
+}
+
+.quickview-wish-btn.wished {
+  border-color: var(--accent);
+  background: rgba(255, 77, 77, 0.1);
+}
+
+.quickview-full-link {
+  text-align: center;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: var(--spacing-md);
+  transition: color var(--transition-fast);
+}
+
+.quickview-full-link:hover {
+  color: var(--accent-secondary);
+}
+
+@media (max-width: 768px) {
+  .quickview-grid {
+    grid-template-columns: 1fr;
+  }
+  .quickview-gallery {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ============================================
+   Countdown Banner
+   ============================================ */
+
+.countdown-banner {
+  padding: var(--spacing-2xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 77, 77, 0.08) 0%, rgba(255, 138, 92, 0.05) 50%, rgba(0, 217, 126, 0.05) 100%);
+  z-index: 0;
+}
+
+.countdown-banner-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 0 60px rgba(255, 77, 77, 0.08);
+  animation: countdownPulse 3s ease-in-out infinite;
+}
+
+@keyframes countdownPulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(255, 77, 77, 0.08); }
+  50% { box-shadow: 0 0 60px rgba(255, 77, 77, 0.15), 0 0 100px rgba(255, 77, 77, 0.05); }
+}
+
+.countdown-badge {
+  display: inline-block;
+  background: var(--accent-gradient);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-md);
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.countdown-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: var(--spacing-xl);
+}
+
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.countdown-number {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 900;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  min-width: 70px;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.countdown-sep {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-top: -16px;
+}
+
+@media (max-width: 600px) {
+  .countdown-number { font-size: 2rem; min-width: 50px; }
+  .countdown-title { font-size: 1.3rem; }
+}
+
+/* ============================================
+   Marquee Brand Ticker
+   ============================================ */
+
+.brands-marquee-wrapper {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.brands-marquee {
+  display: flex;
+  gap: var(--spacing-3xl);
+  animation: marqueeScroll 25s linear infinite;
+  width: fit-content;
+}
+
+.brands-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.brand-marquee-item {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.brand-marquee-item:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* ============================================
+   Hero Particles
+   ============================================ */
+
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: particleFloat ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1.5);
+    opacity: 0.7;
+  }
+}
+
+/* ============================================
+   Gradient Shimmer Text
+   ============================================ */
+
+.gradient-shimmer {
+  background-size: 200% auto;
+  animation: gradientShimmer 3s ease-in-out infinite;
+}
+
+@keyframes gradientShimmer {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+/* ============================================
+   Back to Top Button
+   ============================================ */
+
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9990;
+  box-shadow: 0 4px 20px var(--accent-glow);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.back-to-top:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 6px 30px var(--accent-glow);
+}
+
+/* ============================================
+   Wishlist Page
+   ============================================ */
+
+.wishlist-page {
+  padding-top: 100px;
+  min-height: 100vh;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.wishlist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.wishlist-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.wishlist-card-image {
+  display: block;
+  position: relative;
+  padding-top: 70%;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.wishlist-card-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.wishlist-card:hover .wishlist-card-image img {
+  transform: scale(1.05);
+}
+
+.wishlist-card-body {
+  padding: var(--spacing-lg);
+}
+
+.wishlist-card-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+
+.wishlist-card-name:hover {
+  color: var(--accent);
+}
+
+.wishlist-card-price-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.wishlist-card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.wishlist-card-actions .btn:first-child {
+  flex: 1;
+}
+
+.wishlist-remove-btn {
+  color: var(--text-muted) !important;
+  font-size: 0.85rem;
+}
+
+.wishlist-remove-btn:hover {
+  color: var(--danger) !important;
+}
+
+/* ============================================
+   Wishlist Navbar Button
+   ============================================ */
+
+.wishlist-nav-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all var(--transition-base);
+  color: var(--text-primary);
+}
+
+.wishlist-nav-btn:hover {
+  border-color: var(--accent);
+  background: rgba(255, 77, 77, 0.1);
+  transform: scale(1.08);
+}
+
+.wishlist-nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Recently Viewed
+   ============================================ */
+
+.recently-viewed-scroll {
+  display: flex;
+  gap: var(--spacing-lg);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-md);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.recently-viewed-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.recently-viewed-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+}
+
+.recently-viewed-card {
+  flex-shrink: 0;
+  width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.recently-viewed-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.recently-viewed-img {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.recently-viewed-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.recently-viewed-card:hover .recently-viewed-img img {
+  transform: scale(1.08);
+}
+
+.recently-viewed-info {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recently-viewed-brand {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.recently-viewed-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recently-viewed-price {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+/* ============================================
+   Grid / List View Toggle
+   ============================================ */
+
+.shop-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-left: auto;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: var(--text-muted);
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+.view-toggle-btn.active {
+  background: var(--accent-gradient);
+  color: white;
+}
+
+.view-toggle-btn:hover:not(.active) {
+  color: var(--text-primary);
+}
+
+/* Product List Layout */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.product-list .product-card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border-radius: var(--radius-lg);
+}
+
+.product-list .product-card-image {
+  padding-top: 0;
+  height: 200px;
+}
+
+.product-list .product-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-list .product-card-overlay {
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+/* ============================================
+   Image Zoom on Product Detail
+   ============================================ */
+
+.product-gallery-main {
+  cursor: zoom-in;
+  position: relative;
+}
+
+.product-gallery-main.zoomed {
+  cursor: zoom-out;
+}
+
+.product-gallery-main.zoomed img {
+  transform: scale(1.8);
+  transition: transform var(--transition-slow);
+}
+
+.zoom-hint {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.product-gallery-main:hover .zoom-hint {
+  opacity: 1;
+}
+
+/* ============================================
+   Quantity Selector on Detail
+   ============================================ */
+
+.product-qty-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  margin-bottom: var(--spacing-xl);
+}
+
+/* ============================================
+   Trust Badges
+   ============================================ */
+
+.trust-badges {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.trust-badge span:first-child {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+  .trust-badges {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+}
+
+/* ============================================
+   Detail Wishlist Button
+   ============================================ */
+
+.detail-wish-btn.wished {
+  border-color: var(--accent);
+  background: rgba(255, 77, 77, 0.15);
+}
+
+/* ============================================
+   Toast Progress Bar
+   ============================================ */
+
+.toast {
+  overflow: hidden;
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent-gradient);
+  animation: toastProgress 2.8s linear forwards;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* ============================================
+   Footer Enhancements
+   ============================================ */
+
+.footer-grid {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.footer-bottom-links a {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-bottom-links a:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   Mobile Nav Links Open
+   ============================================ */
+
+@media (max-width: 768px) {
+  .navbar-links.mobile-open {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--border);
+    gap: var(--spacing-md);
+    animation: mobileNavIn 0.3s ease;
+  }
+
+  @keyframes mobileNavIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .navbar-links.mobile-open a {
+    font-size: 1.1rem;
+    padding: var(--spacing-sm) 0;
+  }
+
+  .wishlist-nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .product-list .product-card {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-list .product-card-image {
+    height: auto;
+    padding-top: 100%;
+  }
+}
+
+/* ============================================
+   3D Hero Scene
+   ============================================ */
+
+.hero-3d {
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+.hero-3d-scene {
+  transform-style: preserve-3d;
+}
+
+.hero-3d-layer {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hero-3d-showcase {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ============================================
+   3D Glassmorphism Shoe Backdrop
+   ============================================ */
+
+.hero-shoe-glass-backdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+  z-index: 0;
+}
+
+.glass-backdrop-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  transition: transform 0.2s ease-out;
+}
+
+.glass-backdrop-layer.layer-1 {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  transform: translateZ(0px);
+}
+
+.glass-backdrop-layer.layer-2 {
+  inset: -15px;
+  border-radius: 40px;
+  background: linear-gradient(
+    225deg,
+    rgba(255, 77, 77, 0.06) 0%,
+    rgba(99, 102, 241, 0.04) 50%,
+    rgba(168, 85, 247, 0.06) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  transform: translateZ(-20px) rotateY(-2deg);
+  opacity: 0.8;
+}
+
+.glass-backdrop-layer.layer-3 {
+  inset: -30px;
+  border-radius: 48px;
+  background: linear-gradient(
+    315deg,
+    rgba(99, 102, 241, 0.04) 0%,
+    rgba(168, 85, 247, 0.03) 50%,
+    rgba(255, 77, 77, 0.04) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+  transform: translateZ(-40px) rotateY(2deg) rotateX(1deg);
+  opacity: 0.6;
+}
+
+.glass-backdrop-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 48px;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    rgba(255, 77, 77, 0.12) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    ellipse at 70% 70%,
+    rgba(99, 102, 241, 0.10) 0%,
+    transparent 50%
+  );
+  filter: blur(30px);
+  transform: translateZ(-50px);
+  animation: glassGlowPulse 5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes glassGlowPulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Ensure shoe sits above the glass backdrop */
+.hero-3d-showcase .hero-shoe-img {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-3d-showcase .hero-shoe-shadow {
+  z-index: 1;
+}
+
+/* ============================================
+   360° Turntable Shoe Viewer (Auto-Rotate + Drag)
+   ============================================ */
+
+/* Turntable wrapper — JS controls rotation via inline transform */
+.hero-shoe-turntable {
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Smooth transition when auto-rotating, instant when dragging */
+.hero-shoe-turntable:not(.dragging) {
+  transition: transform 0.05s linear;
+}
+
+.hero-shoe-turntable.dragging {
+  transition: none;
+}
+
+/* Shoe image 3D base */
+.hero-shoe-3d {
+  will-change: filter;
+  transform-style: preserve-3d;
+  position: relative;
+  z-index: 2;
+  pointer-events: none; /* let drag events go to turntable wrapper */
+}
+
+/* ---- 360° Badge ---- */
+.hero-360-badge {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  font-family: var(--font-display);
+  transition: all 0.3s ease;
+}
+
+.hero-360-badge:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-50%) scale(1.05);
+}
+
+.hero-360-badge.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(255, 77, 77, 0.1);
+}
+
+.hero-360-badge-icon {
+  font-size: 1.2rem;
+  color: var(--accent);
+  display: inline-block;
+  animation: badgeIconSpin 3s linear infinite;
+}
+
+.hero-360-badge.active .hero-360-badge-icon {
+  animation: none;
+  color: var(--text-primary);
+}
+
+@keyframes badgeIconSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero-360-badge-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.05em;
+}
+
+.hero-360-badge-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 8px;
+}
+
+/* ---- Drag hint ---- */
+.hero-shoe-hint {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  animation: hintFadeInOut 4s ease-in-out infinite;
+}
+
+@keyframes hintFadeInOut {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* 3D Decorative Rings */
+.hero-3d-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid;
+  pointer-events: none;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.hero-3d-ring.ring-1 {
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 55%;
+  margin-top: -250px;
+  margin-left: -250px;
+  border-color: rgba(255, 255, 255, 0.06);
+  animation: ringRotate 20s linear infinite;
+}
+
+.hero-3d-ring.ring-2 {
+  width: 400px;
+  height: 400px;
+  top: 45%;
+  left: 60%;
+  margin-top: -200px;
+  margin-left: -200px;
+  border-color: rgba(255, 255, 255, 0.04);
+  animation: ringRotate 15s linear infinite reverse;
+}
+
+.hero-3d-ring.ring-3 {
+  width: 600px;
+  height: 600px;
+  top: 55%;
+  left: 50%;
+  margin-top: -300px;
+  margin-left: -300px;
+  border-color: rgba(255, 255, 255, 0.03);
+  border-style: dashed;
+  animation: ringRotate 25s linear infinite;
+}
+
+@keyframes ringRotate {
+  from { transform: rotateX(70deg) rotateZ(0deg); }
+  to { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+/* Glowing Orb */
+.hero-glow-orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: 40%;
+  right: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+  animation: orbPulse 4s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Shoe Shadow */
+.hero-shoe-shadow {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: 60%;
+  height: 40px;
+  margin-left: -30%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+  will-change: transform, opacity;
+}
+
+/* Floating cards smooth transition for 3D movement */
+.hero-3d .hero-floating-card {
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+  animation: none; /* override the default float animation for 3D mode */
+}
+
+.hero-3d .hero-floating-card.top {
+  top: 5%;
+  right: -10%;
+}
+
+.hero-3d .hero-floating-card.bottom {
+  bottom: 20%;
+  left: -10%;
+}
+
+/* Price tag card */
+.hero-floating-card.price-tag {
+  position: absolute;
+  top: 50%;
+  right: -15%;
+  background: rgba(22, 22, 22, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+
+.hero-floating-card.price-tag .floating-card-value {
+  font-size: 1.4rem;
+}
+
+/* Make hero image area preserve 3D for cards inside it */
+.hero-3d .hero-image {
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+/* Responsive: hide 3D rings on mobile */
+@media (max-width: 1024px) {
+  .hero-3d-ring {
+    display: none;
+  }
+  .hero-glow-orb {
+    display: none;
+  }
+  .hero-shoe-shadow {
+    display: none;
+  }
+  .hero-shoe-glass-backdrop {
+    display: none;
+  }
+  .hero-floating-card.price-tag {
+    display: none;
+  }
+  .hero-3d .hero-floating-card.top,
+  .hero-3d .hero-floating-card.bottom {
+    display: none;
+  }
+  .shoe-orbit-ring,
+  .shoe-dynamic-glow,
+  .hero-particles {
+    display: none;
+  }
+}
+
+/* ============================================
+   🎬 Cinematic 3D Shoe Commercial Effects
+   ============================================ */
+
+/* ── Floating Particles ── */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 77, 77, 0.9) 0%,
+    rgba(255, 138, 92, 0.6) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: particleFloat linear infinite;
+  will-change: transform, opacity;
+  filter: blur(0.5px);
+}
+
+/* Alternating particle colors for depth */
+.hero-particle:nth-child(odd) {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.3) 40%,
+    transparent 70%
+  );
+}
+
+.hero-particle:nth-child(3n) {
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.8) 0%,
+    rgba(168, 85, 247, 0.5) 40%,
+    transparent 70%
+  );
+}
+
+.hero-particle:nth-child(5n) {
+  background: radial-gradient(
+    circle,
+    rgba(255, 200, 55, 0.85) 0%,
+    rgba(255, 140, 50, 0.4) 40%,
+    transparent 70%
+  );
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) translateX(0) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-20px) translateX(5px) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-50vh) translateX(-20px) scale(0.8);
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(15px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* ── Shoe Orbit Ring ── */
+.shoe-orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 440px;
+  height: 440px;
+  margin-top: -220px;
+  margin-left: -220px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background: none;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  transition: transform 0.08s linear;
+}
+
+/* Triple orbit ring via pseudo-elements */
+.shoe-orbit-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 77, 77, 0.35);
+  border-right-color: rgba(255, 138, 92, 0.2);
+  box-shadow:
+    0 0 20px rgba(255, 77, 77, 0.15),
+    inset 0 0 20px rgba(255, 77, 77, 0.05);
+  animation: orbitPulse 3s ease-in-out infinite;
+}
+
+.shoe-orbit-ring::after {
+  content: '';
+  position: absolute;
+  inset: 15px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  animation: orbitDashSpin 20s linear infinite reverse;
+}
+
+@keyframes orbitPulse {
+  0%, 100% {
+    border-top-color: rgba(255, 77, 77, 0.35);
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.15), inset 0 0 20px rgba(255, 77, 77, 0.05);
+  }
+  50% {
+    border-top-color: rgba(255, 138, 92, 0.5);
+    box-shadow: 0 0 35px rgba(255, 138, 92, 0.25), inset 0 0 30px rgba(255, 138, 92, 0.08);
+  }
+}
+
+@keyframes orbitDashSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Small glowing dots orbiting the ring */
+.shoe-orbit-ring .orbit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent-glow);
+}
+
+/* ── Dynamic Glow (follows rotation) ── */
+.shoe-dynamic-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  margin-top: -140px;
+  margin-left: -140px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 77, 77, 0.25) 0%,
+    rgba(255, 138, 92, 0.12) 30%,
+    rgba(168, 85, 247, 0.06) 50%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+  animation: dynamicGlowPulse 4s ease-in-out infinite;
+}
+
+@keyframes dynamicGlowPulse {
+  0%, 100% {
+    filter: blur(50px);
+    transform: translate(var(--glow-x, 0), var(--glow-y, 0)) scale(1);
+  }
+  50% {
+    filter: blur(60px);
+    transform: translate(var(--glow-x, 0), var(--glow-y, 0)) scale(1.15);
+  }
+}
+
+/* ── 360° Progress Ring (SVG) ── */
+.hero-360-progress-ring {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.hero-360-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.hero-360-progress-ring .ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 2;
+}
+
+.hero-360-progress-ring .ring-fill {
+  fill: none;
+  stroke: url(#ring-gradient);
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 106.8;
+  transition: stroke-dashoffset 0.08s linear;
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+
+/* ── Cinematic Levitation Float ── */
+.hero-3d-showcase {
+  animation: cinematicFloat 6s ease-in-out infinite;
+}
+
+@keyframes cinematicFloat {
+  0%, 100% {
+    transform: translate3d(var(--mouse-x, 0), calc(var(--mouse-y, 0) + 0px), 80px);
+  }
+  25% {
+    transform: translate3d(var(--mouse-x, 0), calc(var(--mouse-y, 0) - 12px), 80px);
+  }
+  50% {
+    transform: translate3d(var(--mouse-x, 0), calc(var(--mouse-y, 0) + 0px), 80px);
+  }
+  75% {
+    transform: translate3d(var(--mouse-x, 0), calc(var(--mouse-y, 0) + 8px), 80px);
+  }
+}
+
+/* ── Enhanced Cinematic Shoe Shadow ── */
+.hero-3d .hero-shoe-shadow {
+  background: radial-gradient(
+    ellipse,
+    rgba(255, 77, 77, 0.12) 0%,
+    rgba(0, 0, 0, 0.35) 30%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: shadowBreath 6s ease-in-out infinite;
+}
+
+@keyframes shadowBreath {
+  0%, 100% {
+    opacity: 0.35;
+    filter: blur(8px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(12px);
+  }
+}
+
+/* ── Cinematic Ambient Light Sweep ── */
+.hero-3d::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: lightSweep 8s ease-in-out infinite;
+}
+
+@keyframes lightSweep {
+  0% { left: -100%; }
+  50% { left: 200%; }
+  100% { left: 200%; }
+}
+
+/* ── Enhanced Turntable Shoe Glow on Drag ── */
+.hero-shoe-turntable.dragging .hero-shoe-3d {
+  filter: drop-shadow(0 0 30px rgba(255, 77, 77, 0.35))
+          drop-shadow(0 20px 50px rgba(0, 0, 0, 0.6)) !important;
+}
+
+/* ── Shoe Image Cinematic Enhancement ── */
+.hero-3d-showcase .hero-shoe-img {
+  animation: shoeGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes shoeGlow {
+  0% {
+    filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.55))
+            drop-shadow(0 0 20px rgba(255, 77, 77, 0.08));
+  }
+  100% {
+    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.65))
+            drop-shadow(0 0 35px rgba(255, 138, 92, 0.12));
+  }
+}
+
+/* ── Gradient shimmer for hero title ── */
+.gradient-shimmer {
+  background-size: 200% 100%;
+  animation: shimmerGradient 3s ease-in-out infinite;
+}
+
+@keyframes shimmerGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Marquee brands animation ── */
+.brands-marquee-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.brands-marquee {
+  display: flex;
+  gap: var(--spacing-3xl);
+  animation: marqueeScroll 20s linear infinite;
+  width: max-content;
+}
+
+.brand-marquee-item {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+  padding: var(--spacing-lg) 0;
+}
+
+.brand-marquee-item:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout }) {
+function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout, wishlistCount = 0 }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -20,7 +20,6 @@ function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout }) {
     setAccountOpen(false);
   }, [location]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -52,7 +51,7 @@ function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout }) {
           <span className="gradient-text">ShoesCart</span>
         </Link>
 
-        <div className="navbar-links">
+        <div className={`navbar-links ${mobileOpen ? 'mobile-open' : ''}`}>
           <Link to="/" className={location.pathname === '/' ? 'active' : ''} id="nav-home">Home</Link>
           <Link to="/shop" className={location.pathname === '/shop' ? 'active' : ''} id="nav-shop">Shop</Link>
           <Link to="/shop?category=Running" id="nav-running">Running</Link>
@@ -70,6 +69,11 @@ function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout }) {
               id="search-input"
             />
           </form>
+
+          <Link to="/wishlist" className="wishlist-nav-btn" id="wishlist-nav-btn" title="Wishlist">
+            <span>♡</span>
+            {wishlistCount > 0 && <span className="wishlist-nav-badge">{wishlistCount}</span>}
+          </Link>
 
           <Link to="/cart" className="cart-btn" id="cart-btn">
             <span>🛒</span>
@@ -97,6 +101,9 @@ function Navbar({ cartCount, searchQuery, setSearchQuery, user, onLogout }) {
                 <div className="account-dropdown-divider"></div>
                 <Link to="/account" className="account-dropdown-item" id="menu-account">
                   👤 My Account
+                </Link>
+                <Link to="/wishlist" className="account-dropdown-item" id="menu-wishlist">
+                  ♡ Wishlist
                 </Link>
                 <Link to="/cart" className="account-dropdown-item" id="menu-orders">
                   📦 My Orders

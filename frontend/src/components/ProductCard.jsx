@@ -1,6 +1,10 @@
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-function ProductCard({ shoe, addToCart }) {
+function ProductCard({ shoe, addToCart, wishlist = [], toggleWishlist, onQuickView }) {
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   const renderStars = (rating) => {
     const full = Math.floor(rating);
     const half = rating % 1 >= 0.5;
@@ -27,12 +31,67 @@ function ProductCard({ shoe, addToCart }) {
     });
   };
 
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -6;
+    const rotateY = ((x - centerX) / centerX) * 6;
+    setTilt({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
+  const handleQuickView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) onQuickView(shoe);
+  };
+
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (toggleWishlist) toggleWishlist(shoe);
+  };
+
+  const isWished = wishlist.some(w => w.id === shoe.id);
+  const discount = shoe.originalPrice > shoe.price
+    ? Math.round((1 - shoe.price / shoe.originalPrice) * 100)
+    : 0;
+
   return (
-    <Link to={`/product/${shoe.id}`} className="product-card" id={`product-card-${shoe.id}`}>
+    <Link
+      to={`/product/${shoe.id}`}
+      className="product-card product-card-3d"
+      id={`product-card-${shoe.id}`}
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+      }}
+    >
+      <div className="product-card-glow"></div>
       <div className="product-card-image">
         <img src={shoe.image} alt={shoe.name} loading="lazy" />
         {shoe.tag && <span className="product-card-tag">{shoe.tag}</span>}
-        <button className="product-card-wishlist" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>♡</button>
+        {discount > 0 && <span className="product-card-discount">-{discount}%</span>}
+        <button
+          className={`product-card-wishlist ${isWished ? 'wished' : ''}`}
+          onClick={handleWishlist}
+        >
+          {isWished ? '❤️' : '♡'}
+        </button>
+        <div className="product-card-overlay">
+          <button className="product-card-quickview" onClick={handleQuickView}>
+            👁 Quick View
+          </button>
+        </div>
       </div>
       <div className="product-card-body">
         <div className="product-card-brand">{shoe.brand}</div>

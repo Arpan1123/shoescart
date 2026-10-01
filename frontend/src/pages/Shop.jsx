@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import SkeletonCard from '../components/SkeletonCard';
 
 const API_URL = '/api';
 
-function Shop({ addToCart, searchQuery }) {
+function Shop({ addToCart, searchQuery, wishlist, toggleWishlist, onQuickView }) {
   const [shoes, setShoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState(false);
@@ -12,6 +13,7 @@ function Shop({ addToCart, searchQuery }) {
   const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || '');
   const [activeBrand, setActiveBrand] = useState(searchParams.get('brand') || '');
   const [sort, setSort] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
   const [categories] = useState(['All', 'Running', 'Lifestyle', 'Basketball', 'Skateboarding', 'Training']);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ function Shop({ addToCart, searchQuery }) {
   };
 
   return (
-    <div className="shop-page" id="shop-page">
+    <div className="shop-page page-transition" id="shop-page">
       <div className="container">
         <div className="shop-header">
           <h1 className="section-title drift-left">
@@ -93,25 +95,59 @@ function Shop({ addToCart, searchQuery }) {
             </button>
           )}
 
-          <div className="shop-sort">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              id="sort-select"
-            >
-              <option value="">Sort by</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-              <option value="newest">Newest</option>
-            </select>
+          <div className="shop-controls">
+            <div className="view-toggle" id="view-toggle">
+              <button
+                className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+                title="Grid view"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <rect x="0" y="0" width="7" height="7" rx="1" />
+                  <rect x="9" y="0" width="7" height="7" rx="1" />
+                  <rect x="0" y="9" width="7" height="7" rx="1" />
+                  <rect x="9" y="9" width="7" height="7" rx="1" />
+                </svg>
+              </button>
+              <button
+                className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+                title="List view"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <rect x="0" y="1" width="16" height="3" rx="1" />
+                  <rect x="0" y="6.5" width="16" height="3" rx="1" />
+                  <rect x="0" y="12" width="16" height="3" rx="1" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="shop-sort">
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                id="sort-select"
+              >
+                <option value="">Sort by</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+                <option value="newest">Newest</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <p className="shop-count">{shoes.length} shoes found</p>
+        <p className="shop-count">
+          <span className="shop-count-num">{shoes.length}</span> shoes found
+        </p>
 
         {loading ? (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '4rem 0' }}>Loading shoes...</p>
+          <div className="product-grid">
+            {[...Array(8)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
         ) : shoes.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem 0' }}>
             <p style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</p>
@@ -119,14 +155,20 @@ function Shop({ addToCart, searchQuery }) {
             <p style={{ color: 'var(--text-muted)' }}>Try adjusting your filters or search terms</p>
           </div>
         ) : (
-          <div className="product-grid" id="product-grid">
+          <div className={viewMode === 'list' ? 'product-list' : 'product-grid'} id="product-grid">
             {shoes.map((shoe, i) => (
               <div
                 key={shoe.id}
                 className={loaded ? 'drift-float' : ''}
                 style={{ animationDelay: `${i * 100}ms`, opacity: loaded ? undefined : 0 }}
               >
-                <ProductCard shoe={shoe} addToCart={addToCart} />
+                <ProductCard
+                  shoe={shoe}
+                  addToCart={addToCart}
+                  wishlist={wishlist}
+                  toggleWishlist={toggleWishlist}
+                  onQuickView={onQuickView}
+                />
               </div>
             ))}
           </div>
