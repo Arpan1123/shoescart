@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import SkeletonCard from '../components/SkeletonCard';
 
-const API_URL = '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 function Shop({ addToCart, searchQuery, wishlist, toggleWishlist, onQuickView }) {
   const [shoes, setShoes] = useState([]);

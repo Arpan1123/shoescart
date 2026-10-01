@@ -17,7 +17,7 @@ import Shipping from './pages/support/Shipping';
 import Returns from './pages/support/Returns';
 import SizeGuide from './pages/support/SizeGuide';
 
-const API_URL = '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 function App() {
   const [cart, setCart] = useState({ items: [], total: 0, count: 0 });

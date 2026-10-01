@@ -4,7 +4,7 @@ import ProductCard from '../components/ProductCard';
 import SkeletonCard from '../components/SkeletonCard';
 import CountdownBanner from '../components/CountdownBanner';
 
-const API_URL = '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 function AnimatedCounter({ target, suffix = '' }) {
   const [count, setCount] = useState(0);
