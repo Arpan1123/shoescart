@@ -1,53 +1,159 @@
 const express = require("express");
 const router = express.Router();
-const shoes = require("../data/shoes");
+const pool = require("../db");
 
-// GET all shoes
-router.get("/", (req, res) => {
-  const { category, brand, gender, minPrice, maxPrice, search, sort } = req.query;
-  let result = [...shoes];
+// GET all shoes (with filters)
+router.get("/", async (req, res) => {
+  try {
+    const { category, brand, gender, minPrice, maxPrice, search, sort } = req.query;
+    
+    let query = "SELECT * FROM shoes WHERE 1=1";
+    const params = [];
+    let paramIndex = 1;
 
-  if (category) result = result.filter(s => s.category.toLowerCase() === category.toLowerCase());
-  if (brand) result = result.filter(s => s.brand.toLowerCase() === brand.toLowerCase());
-  if (gender) result = result.filter(s => s.gender.toLowerCase() === gender.toLowerCase() || s.gender === "Unisex");
-  if (minPrice) result = result.filter(s => s.price >= Number(minPrice));
-  if (maxPrice) result = result.filter(s => s.price <= Number(maxPrice));
-  if (search) result = result.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase()) ||
-    s.brand.toLowerCase().includes(search.toLowerCase())
-  );
+    if (category) {
+      query += ` AND LOWER(category) = LOWER($${paramIndex++})`;
+      params.push(category);
+    }
+    if (brand) {
+      query += ` AND LOWER(brand) = LOWER($${paramIndex++})`;
+      params.push(brand);
+    }
+    if (gender) {
+      query += ` AND (LOWER(gender) = LOWER($${paramIndex++}) OR gender = 'Unisex')`;
+      params.push(gender);
+    }
+    if (minPrice) {
+      query += ` AND price >= $${paramIndex++}`;
+      params.push(Number(minPrice));
+    }
+    if (maxPrice) {
+      query += ` AND price <= $${paramIndex++}`;
+      params.push(Number(maxPrice));
+    }
+    if (search) {
+      query += ` AND (LOWER(name) LIKE $${paramIndex} OR LOWER(brand) LIKE $${paramIndex})`;
+      params.push(`%${search.toLowerCase()}%`);
+      paramIndex++;
+    }
 
-  if (sort === "price_asc") result.sort((a, b) => a.price - b.price);
-  else if (sort === "price_desc") result.sort((a, b) => b.price - a.price);
-  else if (sort === "rating") result.sort((a, b) => b.rating - a.rating);
-  else if (sort === "newest") result.sort((a, b) => b.id - a.id);
+    // Sorting
+    if (sort === "price_asc") query += " ORDER BY price ASC";
+    else if (sort === "price_desc") query += " ORDER BY price DESC";
+    else if (sort === "rating") query += " ORDER BY rating DESC";
+    else if (sort === "newest") query += " ORDER BY id DESC";
 
-  res.json({ count: result.length, shoes: result });
+    const result = await pool.query(query, params);
+
+    // Map column names to match frontend expectations (snake_case → camelCase)
+    const shoes = result.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      brand: row.brand,
+      price: parseFloat(row.price),
+      originalPrice: parseFloat(row.original_price),
+      image: row.image,
+      images: row.images,
+      category: row.category,
+      gender: row.gender,
+      rating: parseFloat(row.rating),
+      reviews: row.reviews,
+      description: row.description,
+      sizes: row.sizes,
+      colors: row.colors,
+      inStock: row.in_stock,
+      featured: row.featured,
+      tag: row.tag,
+    }));
+
+    res.json({ count: shoes.length, shoes });
+  } catch (err) {
+    console.error("Error fetching shoes:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 // GET featured shoes
-router.get("/featured", (req, res) => {
-  const featured = shoes.filter(s => s.featured);
-  res.json({ count: featured.length, shoes: featured });
+router.get("/featured", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM shoes WHERE featured = true");
+    const shoes = result.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      brand: row.brand,
+      price: parseFloat(row.price),
+      originalPrice: parseFloat(row.original_price),
+      image: row.image,
+      images: row.images,
+      category: row.category,
+      gender: row.gender,
+      rating: parseFloat(row.rating),
+      reviews: row.reviews,
+      description: row.description,
+      sizes: row.sizes,
+      colors: row.colors,
+      inStock: row.in_stock,
+      featured: row.featured,
+      tag: row.tag,
+    }));
+    res.json({ count: shoes.length, shoes });
+  } catch (err) {
+    console.error("Error fetching featured shoes:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 // GET shoe by ID
-router.get("/:id", (req, res) => {
-  const shoe = shoes.find(s => s.id === Number(req.params.id));
-  if (!shoe) return res.status(404).json({ message: "Shoe not found" });
-  res.json(shoe);
+router.get("/:id", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM shoes WHERE id = $1", [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ message: "Shoe not found" });
+    const row = result.rows[0];
+    res.json({
+      id: row.id,
+      name: row.name,
+      brand: row.brand,
+      price: parseFloat(row.price),
+      originalPrice: parseFloat(row.original_price),
+      image: row.image,
+      images: row.images,
+      category: row.category,
+      gender: row.gender,
+      rating: parseFloat(row.rating),
+      reviews: row.reviews,
+      description: row.description,
+      sizes: row.sizes,
+      colors: row.colors,
+      inStock: row.in_stock,
+      featured: row.featured,
+      tag: row.tag,
+    });
+  } catch (err) {
+    console.error("Error fetching shoe:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 // GET unique brands
-router.get("/filters/brands", (req, res) => {
-  const brands = [...new Set(shoes.map(s => s.brand))];
-  res.json(brands);
+router.get("/filters/brands", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT DISTINCT brand FROM shoes ORDER BY brand");
+    res.json(result.rows.map(r => r.brand));
+  } catch (err) {
+    console.error("Error fetching brands:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 // GET unique categories
-router.get("/filters/categories", (req, res) => {
-  const categories = [...new Set(shoes.map(s => s.category))];
-  res.json(categories);
+router.get("/filters/categories", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT DISTINCT category FROM shoes ORDER BY category");
+    res.json(result.rows.map(r => r.category));
+  } catch (err) {
+    console.error("Error fetching categories:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 module.exports = router;
