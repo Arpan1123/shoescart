@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const shoeRoutes = require("./routes/shoeRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const authRoutes = require("./routes/authRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 dotenv.config();
 
@@ -16,6 +18,8 @@ app.use(express.json());
 // Routes
 app.use("/api/shoes", shoeRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
